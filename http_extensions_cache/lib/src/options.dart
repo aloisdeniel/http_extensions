@@ -21,7 +21,7 @@ class CacheOptions {
   /// if expired).
   final bool forceCache;
 
-  /// Indicates whether the request should use cache.
+  /// Indicates whether the request should bypass all caching logic.
   final bool ignoreCache;
 
   /// If [true], on error, if a value is available in the

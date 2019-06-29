@@ -37,10 +37,25 @@ class CacheExtension extends Extension<CacheOptions> {
           "[$cacheId][${request.url}] Not existing or expired cache, or forced update : starting a new request");
 
       try {
+
+        if(result != null && !request.headers.containsKey(HttpHeaders.ifModifiedSinceHeader)) {
+          logger?.fine(
+          "[$cacheId][${request.url}] Adding `${HttpHeaders.ifModifiedSinceHeader}` header");
+          request.headers[HttpHeaders.ifModifiedSinceHeader] = HttpDate.format(result.downloadedAt);
+        }
+;
         final response = await super.sendWithOptions(request, options);
+
+        if(result != null && response.statusCode == 304) {
+          logger?.fine(
+          "[$cacheId][${request.url}] Content not modified (status code 304), returning cache");
+          return result;
+        }
+
         final expiry = DateTime.now().add(options.expiry);
         result = await CachedResponse.fromResponse(response,
             expiry: expiry, id: cacheId, request: request);
+
 
         if (options.shouldBeSaved(result)) {
           logger?.fine(
