@@ -32,7 +32,7 @@ class BaseUrlExtension extends Extension<BaseUrlOptions> {
       var result = Request(original.method, url);
       if (original.headers != null) result.headers.addAll(original.headers);
       if (original.encoding != null) result.encoding = original.encoding;
-      if (original.body != null) result.body = original.body;
+      if (original.bodyBytes != null) result.bodyBytes = original.bodyBytes;
       return result;
     }
 

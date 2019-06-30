@@ -1,3 +1,7 @@
+## 0.1.4
+
+- Fixed default encoding
+
 ## 0.1.1
 
 - Fixed issue with body serialization

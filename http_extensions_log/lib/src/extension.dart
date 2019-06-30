@@ -42,14 +42,11 @@ class LogExtension extends Extension<LogOptions> {
     if (options.logContent) {
       requestLog.writeln("  * content-length: ${request.contentLength}");
       if (request is Request) {
-        if (request.body != null) {
-          requestLog.writeln("  * body: ${request.body}");
-        }
         if (request.headers['content-type'] == "application/x-www-form-urlencoded" && request.bodyFields != null) {
           requestLog.writeln("  * body(fields): ${request.bodyFields}");
         }
         if (request.bodyBytes != null) {
-          requestLog.writeln("  * body(bytes): ${request.bodyBytes}");
+          requestLog.writeln("  * body(bytes) of size ${request.bodyBytes.length}");
         }
       }
     }
