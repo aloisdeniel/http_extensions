@@ -37,7 +37,7 @@ class LogExtension extends Extension<LogOptions> {
           "[HTTP]($id:${request.method}:${request.url}) Request succeeded (statusCode: ${result.statusCode})");
       return result;
     } catch (e) {
-      print("[HTTP] An error occured during request : $e");
+      print("[HTTP]($id:${request.method}:${request.url}) An error occured during request : $e");
       rethrow;
     }
   }
