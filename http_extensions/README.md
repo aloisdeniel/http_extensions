@@ -29,15 +29,15 @@ class LogExtension extends Extension<LogOptions> {
     }
 
     try {
-      _requestId++;
+      final id = _requestId++;
       print(
-          "[HTTP]($_requestId:${request.method}:${request.url}) Starting request ...");
+          "[HTTP]($id:${request.method}:${request.url}) Starting request ...");
       final result = await super.sendWithOptions(request, options);
       print(
-          "[HTTP]($_requestId:${request.method}:${request.url}) Request succeeded (statusCode: ${result.statusCode})");
+          "[HTTP]($id:${request.method}:${request.url}) Request succeeded (statusCode: ${result.statusCode})");
       return result;
     } catch (e) {
-      print("[HTTP] An error occured during request : $e");
+      print("[HTTP]($id:${request.method}:${request.url}) An error occured during request : $e");
       rethrow;
     }
   }
@@ -74,11 +74,12 @@ Future main() async {
 
 If you create an extension package, please follow those naming conventions :
 
-* `http_extensions_<name>` : extension class 
+* `http_extensions_<name>` : package name 
 * `<Name>Extension` : extension class 
 * `<Name>Options` : options class.
 
 `<name>` : camelCase
+
 `<Name>` : PascalCase
 
 [See a log example](example/log_extension.dart)
