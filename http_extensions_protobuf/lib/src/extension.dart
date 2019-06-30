@@ -20,11 +20,16 @@ class ProtobufExtension extends Extension<ProtobufOptions> {
   void _updateBody(BaseRequest original, List<int> body) {
     if (original is ExtensionRequest) {
       _updateBody(original.request, body);
+      return;
     } else if (original is Request) {
       original.bodyBytes = body;
+      return;
+    } else if (original is StreamedRequest) {
+      original.sink.add(body);
+      return;
     }
 
-    throw ArgumentError("Failed to copy request for retry");
+    throw ArgumentError("Failed to update body with protobuf content");
   }
 
   Future<StreamedResponse> sendWithOptions(
