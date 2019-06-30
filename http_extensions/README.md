@@ -78,7 +78,7 @@ If you create an extension package, please follow those naming conventions :
 * `<Name>Extension` : extension class 
 * `<Name>Options` : options class.
 
-`<name>` : camelCase
+`<name>` : snake_case
 
 `<Name>` : PascalCase
 
