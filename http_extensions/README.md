@@ -29,12 +29,12 @@ class LogExtension extends Extension<LogOptions> {
     }
 
     try {
-      _requestId++;
+      final id = _requestId++;
       print(
-          "[HTTP]($_requestId:${request.method}:${request.url}) Starting request ...");
+          "[HTTP]($id:${request.method}:${request.url}) Starting request ...");
       final result = await super.sendWithOptions(request, options);
       print(
-          "[HTTP]($_requestId:${request.method}:${request.url}) Request succeeded (statusCode: ${result.statusCode})");
+          "[HTTP]($id:${request.method}:${request.url}) Request succeeded (statusCode: ${result.statusCode})");
       return result;
     } catch (e) {
       print("[HTTP] An error occured during request : $e");
