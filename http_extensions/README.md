@@ -74,11 +74,12 @@ Future main() async {
 
 If you create an extension package, please follow those naming conventions :
 
-* `http_extensions_<name>` : extension class 
+* `http_extensions_<name>` : package name 
 * `<Name>Extension` : extension class 
 * `<Name>Options` : options class.
 
 `<name>` : camelCase
+
 `<Name>` : PascalCase
 
 [See a log example](example/log_extension.dart)
