@@ -2,6 +2,7 @@ import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
 import 'package:logging/logging.dart';
 
+import 'buffered_request.dart';
 import 'options.dart';
 
 class RetryExtension extends Extension<RetryOptions> {
@@ -21,7 +22,13 @@ class RetryExtension extends Extension<RetryOptions> {
       var result = Request(original.method, original.url);
       if (original.headers != null) result.headers.addAll(original.headers);
       if (original.encoding != null) result.encoding = original.encoding;
-      if (original.body != null) result.body = original.body;
+      if (original.bodyBytes != null) result.bodyBytes = original.bodyBytes;
+      return result;
+    }
+
+    if (original is StreamedRequest) {
+      var result = BufferedStreamRequest(original);
+      if (original.headers != null) result.headers.addAll(original.headers);
       return result;
     }
 
@@ -44,12 +51,18 @@ class RetryExtension extends Extension<RetryOptions> {
       await Future.delayed(options.retryInterval);
     }
 
-      logger?.fine("Retrying request (remaining retries: ${options.retries - 1})");
+    logger
+        ?.fine("Retrying request (remaining retries: ${options.retries - 1})");
     return await this.sendWithOptions(_copyRequest(request), newOptions);
   }
 
   Future<StreamedResponse> sendWithOptions(
       BaseRequest request, RetryOptions options) async {
+    
+    // Copying request a first time in case of a [StreamRequest] that should 
+    // be buffered for potential later retry.
+    request = _copyRequest(request);
+
     try {
       final result = await super.sendWithOptions(request, options);
       if (options.retries > 0 && options.retryEvaluator(null, result)) {

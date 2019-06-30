@@ -1,6 +1,6 @@
 name: http_extensions_retry
 description: An http extension that retries failed requests.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/aloisdeniel/http_extensions
 author: aloisdeniel <alois.deniel@outlook.com>
 
