@@ -39,10 +39,10 @@ class ProtobufExtension extends Extension<ProtobufOptions> {
       logger?.fine(
           "[${request.url}] Serializing ${options.requestMessage.runtimeType} body with protobuf");
       final requestBytes = options.requestMessage.writeToBuffer();
+      _updateBody(request, requestBytes);
       request.headers[HttpHeaders.contentTypeHeader] = options.contentType;
       request.headers[HttpHeaders.contentLengthHeader] =
           requestBytes.length.toString();
-      _updateBody(request, requestBytes);
     }
 
     if (options.responseMessage != null) {
