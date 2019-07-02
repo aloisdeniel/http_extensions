@@ -16,7 +16,7 @@ main() async {
       LogExtension(
         logger: Logger("Http"),
         defaultOptions: LogOptions(
-          logContent: false,
+          logContent: true,
         )
       ),
     ],

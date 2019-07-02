@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
-import 'package:http_extensions_log/src/buffered_response.dart';
 import 'package:logging/logging.dart';
 
 import 'options.dart';
@@ -23,7 +22,7 @@ class LogExtension extends Extension<LogOptions> {
 
   int _id = 0;
 
-  String _formatRequest(int id, BaseRequest request, LogOptions options) {
+  Future<String> _formatRequest(int id, BaseRequest request, LogOptions options) async {
     if (request is ExtensionRequest) {
       return _formatRequest(id, request.request, options);
     }
@@ -41,14 +40,10 @@ class LogExtension extends Extension<LogOptions> {
 
     if (options.logContent) {
       requestLog.writeln("  * content-length: ${request.contentLength}");
-      if (request is Request) {
-        if (request.headers['content-type'] == "application/x-www-form-urlencoded" && request.bodyFields != null) {
-          requestLog.writeln("  * body(fields): ${request.bodyFields}");
-        }
-        if (request.bodyBytes != null) {
-          requestLog.writeln("  * body(bytes) of size ${request.bodyBytes.length}");
-        }
-      }
+      
+      final bytes = await request.finalize();
+      final content = await bytes.toBytes();
+      requestLog.writeln("  * content: ${utf8.decode(content, allowMalformed: true)}");
     }
 
     return requestLog.toString();
@@ -74,7 +69,7 @@ class LogExtension extends Extension<LogOptions> {
     if (options.logContent) {
       requestLog.writeln("  * content-length: ${response.contentLength}");
       final content = await response.stream.toBytes();
-      requestLog.writeln("  * content: ${utf8.decode(content)}");
+      requestLog.writeln("  * content: ${utf8.decode(content, allowMalformed: true)}");
     }
 
     return requestLog.toString();
@@ -104,8 +99,12 @@ class LogExtension extends Extension<LogOptions> {
 
     final id = _id++;
 
+    if (options.logContent) {
+        request = BufferedRequest(request);
+      }
+
     // Logging request
-    final requestLog = _formatRequest(id, request, options);
+    final requestLog = await _formatRequest(id, request, options);
     this.log(requestLog, options);
 
     try {

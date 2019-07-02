@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:http/http.dart';
 
 /// Allows to read multiple times the content of a [StreamedRequest].
-class BufferedStreamRequest extends BaseRequest implements StreamedRequest {
-  BufferedStreamRequest(this.base) : super(base.method, base.url);
+/// 
+/// The [base.finalize] method is called on first call to [finalize] and
+/// the result is stored to be returned on each later [finalize] calls.
+class BufferedRequest extends BaseRequest {
+  BufferedRequest(this.base) : super(base.method, base.url);
 
-  final StreamedRequest base;
+  final BaseRequest base;
 
   List<int> _bytes;
 
@@ -46,7 +49,4 @@ class BufferedStreamRequest extends BaseRequest implements StreamedRequest {
     _bytes = await s.toBytes();
     return _bytes;
   }
-
-  @override
-  EventSink<List<int>> get sink => base.sink;
 }

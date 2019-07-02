@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
+import 'request.dart';
 import 'package:logging/logging.dart';
+import 'package:protobuf/protobuf.dart' as prefix0;
 
 import 'options.dart';
 
@@ -17,32 +19,30 @@ class ProtobufExtension extends Extension<ProtobufOptions> {
             "Global protobuf options should have an empty response message"),
         super(defaultOptions: defaultOptions);
 
-  void _updateBody(BaseRequest original, List<int> body) {
+  BaseRequest _createRequest(BaseRequest original, ProtobufOptions options) {
     if (original is ExtensionRequest) {
-      _updateBody(original.request, body);
-      return;
-    } else if (original is Request) {
-      original.bodyBytes = body;
-      return;
-    } else if (original is StreamedRequest) {
-      original.sink.add(body);
-      return;
+      return ExtensionRequest(
+        request: _createRequest(original.request, options),
+        options: original.options,
+      );
     }
 
-    throw ArgumentError("Failed to update body with protobuf content");
+    final request =
+        ProtobufRequest.fromRequest(original, options.requestMessage);
+
+    request.headers[HttpHeaders.contentTypeHeader] = options.contentType;
+    request.headers[HttpHeaders.contentLengthHeader] =
+        request.bytes.length.toString();
+
+    return request;
   }
 
   Future<StreamedResponse> sendWithOptions(
       BaseRequest request, ProtobufOptions options) async {
-    if (options.requestMessage != null &&
-        options.shouldSerialize(request)) {
+    if (options.requestMessage != null && options.shouldSerialize(request)) {
       logger?.fine(
           "[${request.url}] Serializing ${options.requestMessage.runtimeType} body with protobuf");
-      final requestBytes = options.requestMessage.writeToBuffer();
-      _updateBody(request, requestBytes);
-      request.headers[HttpHeaders.contentTypeHeader] = options.contentType;
-      request.headers[HttpHeaders.contentLengthHeader] =
-          requestBytes.length.toString();
+      request = _createRequest(request, options);
     }
 
     if (options.responseMessage != null) {
@@ -51,8 +51,7 @@ class ProtobufExtension extends Extension<ProtobufOptions> {
 
     var result = await super.sendWithOptions(request, options);
 
-    if (options.responseMessage != null &&
-        options.shouldDeserialize(result)) {
+    if (options.responseMessage != null && options.shouldDeserialize(result)) {
       logger?.fine(
           "[${request.url}] Deserializing ${options.responseMessage.runtimeType} content with protobuf");
       final responseBytes = await result.stream.toBytes();

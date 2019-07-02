@@ -2,7 +2,6 @@ import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
 import 'package:logging/logging.dart';
 
-import 'buffered_request.dart';
 import 'options.dart';
 
 class RetryExtension extends Extension<RetryOptions> {
@@ -18,21 +17,7 @@ class RetryExtension extends Extension<RetryOptions> {
           request: _copyRequest(original.request), options: original.options);
     }
 
-    if (original is Request) {
-      var result = Request(original.method, original.url);
-      if (original.headers != null) result.headers.addAll(original.headers);
-      if (original.encoding != null) result.encoding = original.encoding;
-      if (original.bodyBytes != null) result.bodyBytes = original.bodyBytes;
-      return result;
-    }
-
-    if (original is StreamedRequest) {
-      var result = BufferedStreamRequest(original);
-      if (original.headers != null) result.headers.addAll(original.headers);
-      return result;
-    }
-
-    throw ArgumentError("Failed to copy request for retry");
+    return BufferedRequest(original);
   }
 
   Future<StreamedResponse> _retry(
