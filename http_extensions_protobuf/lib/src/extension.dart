@@ -29,10 +29,7 @@ class ProtobufExtension extends Extension<ProtobufOptions> {
 
     final request =
         ProtobufRequest.fromRequest(original, options.requestMessage);
-
     request.headers[HttpHeaders.contentTypeHeader] = options.contentType;
-    request.headers[HttpHeaders.contentLengthHeader] =
-        request.bytes.length.toString();
 
     return request;
   }

@@ -1,3 +1,8 @@
+## 0.1.10
+
+- Fixed issue with content-length header
+- Working example
+
 ## 0.1.4
 
 - Fixed default encoding

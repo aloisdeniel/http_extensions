@@ -21,12 +21,14 @@ main() async {
 
   // The new request will get data and add it to cache
   final proto = ProtobufOptions(
-    requestMessage: HelloRequest(),
+    requestMessage: (HelloRequest()
+      ..name = "John"
+    ),
     responseMessage: HelloReply(),
   );
 
   final response = await client.getWithOptions(
-    "http://www.flutter.dev",
+    "http://localhost:8080",
     options: [proto],
   );
 
