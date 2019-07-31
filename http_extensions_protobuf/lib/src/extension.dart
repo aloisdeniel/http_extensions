@@ -1,10 +1,9 @@
-import 'dart:io';
 
+import 'package:http_extensions/helpers.dart';
 import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
 import 'request.dart';
 import 'package:logging/logging.dart';
-import 'package:protobuf/protobuf.dart' as prefix0;
 
 import 'options.dart';
 

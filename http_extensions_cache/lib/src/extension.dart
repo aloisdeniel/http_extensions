@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
 import 'package:logging/logging.dart';
 
+import 'package:http_extensions/helpers.dart';
 import 'options.dart';
 import 'stores/memory_store.dart';
 import 'stores/store.dart';

@@ -1,6 +1,6 @@
 name: http_extensions_protobuf
 description: An http extension that serializes requests body to protobuf and deserializes responses's content from protobuf.
-version: 0.1.10
+version: 0.1.11
 homepage: https://github.com/aloisdeniel/http_extensions
 author: aloisdeniel <alois.deniel@outlook.com>
 environment:
@@ -9,7 +9,7 @@ environment:
 dependencies:
   meta: ^1.1.6
   http: ^0.12.0+1
-  http_extensions: ^0.1.1
+  http_extensions: ^0.1.2
   logging: ^0.11.3
   protobuf: ^0.13.12
 
