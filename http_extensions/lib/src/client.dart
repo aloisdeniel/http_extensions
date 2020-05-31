@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_extensions/http_extensions.dart';
 import 'package:meta/meta.dart';
+
+import '../helpers.dart';
 import 'request.dart';
 
 class ExtendedClient extends http.BaseClient {
@@ -62,6 +64,31 @@ class ExtendedClient extends http.BaseClient {
           Encoding encoding}) =>
       _sendUnstreamedWithOptions("POST", url, headers, options, body, encoding);
 
+  Future<http.Response> formWithOptions(
+    String url, {
+    Map<String, String> headers,
+    Map<String, dynamic> body,
+    List<http.MultipartFile> files,
+    List<dynamic> options,
+  }) async {
+    final request = http.MultipartRequest('POST', Uri.parse(url));
+
+    request.headers.addAll({
+      if (headers != null) ...headers,
+      HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded'
+    });
+
+    if (body != null && body.isNotEmpty) {
+      request.fields.addAll(_encodeFormBody(body));
+    }
+
+    if (files != null && files.isNotEmpty) {
+      request.files.addAll(files);
+    }
+
+    return sendWithOptions(request, options).then(http.Response.fromStream);
+  }
+
   /// Sends a non-streaming [Request] and returns a non-streaming [Response].
   Future<http.Response> _sendUnstreamedWithOptions(
       String method, url, Map<String, String> headers, List<dynamic> options,
@@ -113,4 +140,15 @@ abstract class Extension<TOptions> extends http.BaseClient {
     assert(this._inner != null, "inner http client must not be null");
     return this._inner.send(request);
   }
+}
+
+String _encodeBody(dynamic value) => json.encode(value);
+
+Map<String, String> _encodeFormBody(Map<String, dynamic> data) {
+  return data.map((key, dynamic value) =>
+      MapEntry(key, _isPrimitiveValue(value) ? value : _encodeBody(value)));
+}
+
+bool _isPrimitiveValue(dynamic value) {
+  return [int, double, bool, String].contains(value.runtimeType);
 }
