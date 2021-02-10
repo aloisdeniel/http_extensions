@@ -7,7 +7,7 @@ class BackupCacheStore extends CacheStore {
   final CacheStore primaryStore;
   final CacheStore backupStore;
 
-  BackupCacheStore({@required this.backupStore, CacheStore primaryStore})
+  BackupCacheStore({required this.backupStore, CacheStore? primaryStore})
       : assert(backupStore != null),
         this.primaryStore = primaryStore ?? MemoryCacheStore();
 
@@ -24,7 +24,7 @@ class BackupCacheStore extends CacheStore {
   }
 
   @override
-  Future<CachedResponse> get(String id) async {
+  Future<CachedResponse?> get(String id) async {
     final existing = await this.primaryStore.get(id);
     if (existing != null) {
       return existing;

@@ -14,21 +14,20 @@ class LogExtension extends Extension<LogOptions> {
 
   Future<StreamedResponse> sendWithOptions(
       BaseRequest request, LogOptions options) async {
-
-    if(!options.isEnabled) {
+    if (!options.isEnabled) {
       return await super.sendWithOptions(request, options);
     }
 
     try {
       _requestId++;
       print(
-          "[HTTP]($_requestId:${request.method}:${request.url}) Starting request ...");
+          '[HTTP]($_requestId:${request.method}:${request.url}) Starting request ...');
       final result = await super.sendWithOptions(request, options);
       print(
-          "[HTTP]($_requestId:${request.method}:${request.url}) Request succeeded (statusCode: ${result.statusCode})");
+          '[HTTP]($_requestId:${request.method}:${request.url}) Request succeeded (statusCode: ${result.statusCode})');
       return result;
     } catch (e) {
-      print("[HTTP] An error occured during request : $e");
+      print('[HTTP] An error occured during request : $e');
       rethrow;
     }
   }

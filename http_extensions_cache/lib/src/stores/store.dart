@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 abstract class CacheStore {
   const CacheStore();
-  Future<CachedResponse> get(String id);
+  Future<CachedResponse?> get(String id);
   Future<void> set(CachedResponse response);
   Future<void> updateExpiry(String id, DateTime newExpiry);
   Future<void> delete(String id);
@@ -14,24 +14,24 @@ abstract class CacheStore {
 
 class CachedResponse implements StreamedResponse {
   CachedResponse({
-    @required this.id,
-    @required this.bytes,
-    @required this.request,
-    @required this.expiry,
-    @required DateTime downloadedAt,
-    @required this.headers,
-    @required this.isRedirect,
-    @required this.persistentConnection,
-    @required this.reasonPhrase,
-    @required this.statusCode,
+    required this.id,
+    required this.bytes,
+    required this.request,
+    required this.expiry,
+    required DateTime? downloadedAt,
+    required this.headers,
+    required this.isRedirect,
+    required this.persistentConnection,
+    required this.reasonPhrase,
+    required this.statusCode,
   })  : this.downloadedAt = downloadedAt ?? DateTime.now(),
         this.contentLength = bytes.length;
 
   static Future<CachedResponse> fromResponse(StreamedResponse response, {
-    @required String id,
-    @required BaseRequest request,
-    @required DateTime expiry,
-    DateTime downloadedAt,}) async {
+    required String id,
+    required BaseRequest request,
+    required DateTime expiry,
+    DateTime? downloadedAt,}) async {
     final bytes = await response.stream.toBytes();
 
     return CachedResponse(
@@ -67,7 +67,7 @@ class CachedResponse implements StreamedResponse {
   final bool persistentConnection;
 
   @override
-  final String reasonPhrase;
+  final String? reasonPhrase;
 
   @override
   final int statusCode;
@@ -76,16 +76,16 @@ class CachedResponse implements StreamedResponse {
   ByteStream get stream => ByteStream(Stream.fromIterable([this.bytes]));
 
   CachedResponse copyWith({
-    String id,
-    List<int> bytes,
-    BaseRequest request,
-    DateTime expiry,
-    DateTime downloadedAt,
-    Map<String, String> headers,
-    bool isRedirect,
-    bool persistentConnection,
-    String reasonPhrase,
-    int statusCode,
+    String? id,
+    List<int>? bytes,
+    BaseRequest? request,
+    DateTime? expiry,
+    DateTime? downloadedAt,
+    Map<String, String>? headers,
+    bool? isRedirect,
+    bool? persistentConnection,
+    String? reasonPhrase,
+    int? statusCode,
   }) =>
       CachedResponse(
         id: id ?? this.id,

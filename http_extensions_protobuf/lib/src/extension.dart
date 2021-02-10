@@ -1,4 +1,3 @@
-
 import 'package:http_extensions/helpers.dart';
 import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
@@ -8,14 +7,14 @@ import 'package:logging/logging.dart';
 import 'options.dart';
 
 class ProtobufExtension extends Extension<ProtobufOptions> {
-  final Logger logger;
+  final Logger? logger;
 
   ProtobufExtension(
       {ProtobufOptions defaultOptions = const ProtobufOptions(), this.logger})
       : assert(defaultOptions.requestMessage == null,
-            "Global protobuf options should have an empty request message"),
+            'Global protobuf options should have an empty request message'),
         assert(defaultOptions.responseMessage == null,
-            "Global protobuf options should have an empty response message"),
+            'Global protobuf options should have an empty response message'),
         super(defaultOptions: defaultOptions);
 
   BaseRequest _createRequest(BaseRequest original, ProtobufOptions options) {
@@ -27,7 +26,7 @@ class ProtobufExtension extends Extension<ProtobufOptions> {
     }
 
     final request =
-        ProtobufRequest.fromRequest(original, options.requestMessage);
+        ProtobufRequest.fromRequest(original, options.requestMessage!);
     request.headers[HttpHeaders.contentTypeHeader] = options.contentType;
 
     return request;
@@ -37,7 +36,7 @@ class ProtobufExtension extends Extension<ProtobufOptions> {
       BaseRequest request, ProtobufOptions options) async {
     if (options.requestMessage != null && options.shouldSerialize(request)) {
       logger?.fine(
-          "[${request.url}] Serializing ${options.requestMessage.runtimeType} body with protobuf");
+          '[${request.url}] Serializing ${options.requestMessage.runtimeType} body with protobuf');
       request = _createRequest(request, options);
     }
 
@@ -49,9 +48,9 @@ class ProtobufExtension extends Extension<ProtobufOptions> {
 
     if (options.responseMessage != null && options.shouldDeserialize(result)) {
       logger?.fine(
-          "[${request.url}] Deserializing ${options.responseMessage.runtimeType} content with protobuf");
+          '[${request.url}] Deserializing ${options.responseMessage.runtimeType} content with protobuf');
       final responseBytes = await result.stream.toBytes();
-      options.responseMessage.mergeFromBuffer(responseBytes);
+      options.responseMessage!.mergeFromBuffer(responseBytes);
       return StreamedResponse(
           Stream.fromIterable([responseBytes]), result.statusCode,
           contentLength: responseBytes.length,
