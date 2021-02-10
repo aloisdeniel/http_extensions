@@ -2,16 +2,15 @@ import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 
 class BaseUrlRequest implements BaseRequest {
- 
   final Uri baseUrl;
 
   final BaseRequest base;
 
-  BaseUrlRequest({@required this.baseUrl, @required this.base});
+  BaseUrlRequest({required this.baseUrl, required this.base});
 
   @override
-  int get contentLength => base.contentLength;
-  set contentLength(int v) => base.contentLength = v;
+  int? get contentLength => base.contentLength;
+  set contentLength(int? v) => base.contentLength = v;
 
   @override
   bool get followRedirects => base.followRedirects;
@@ -38,9 +37,8 @@ class BaseUrlRequest implements BaseRequest {
   String get method => base.method;
 
   @override
-  Future<StreamedResponse> send() => throw Exception("Not supported");
+  Future<StreamedResponse> send() => throw Exception('Not supported');
 
   @override
   Uri get url => baseUrl.resolve(base.url.toString());
-
 }

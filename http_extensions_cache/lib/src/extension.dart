@@ -8,7 +8,7 @@ import 'stores/memory_store.dart';
 import 'stores/store.dart';
 
 class CacheExtension extends Extension<CacheOptions> {
-  final Logger logger;
+  final Logger? logger;
   final CacheStore _globalStore;
 
   CacheExtension(
@@ -23,9 +23,9 @@ class CacheExtension extends Extension<CacheOptions> {
     }
 
     final cacheId = options.keyBuilder(request);
-    assert(cacheId != null, "The cache key builder produced an empty key");
+    assert(cacheId != null, 'The cache key builder produced an empty key');
     final store = options.store ?? _globalStore;
-    CachedResponse result = await store.get(cacheId);
+    CachedResponse? result = await store.get(cacheId);
 
     var souldUpdate = options.forceUpdate ||
         result == null ||
@@ -33,21 +33,22 @@ class CacheExtension extends Extension<CacheOptions> {
 
     if (souldUpdate) {
       logger?.fine(
-          "[$cacheId][${request.url}] Not existing or expired cache, or forced update : starting a new request");
+          '[$cacheId][${request.url}] Not existing or expired cache, or forced update : starting a new request');
 
       try {
-
-        if(result != null && !request.headers.containsKey(HttpHeaders.ifModifiedSinceHeader)) {
+        if (result != null &&
+            !request.headers.containsKey(HttpHeaders.ifModifiedSinceHeader)) {
           logger?.fine(
-          "[$cacheId][${request.url}] Adding `${HttpHeaders.ifModifiedSinceHeader}` header");
-          request.headers[HttpHeaders.ifModifiedSinceHeader] = HttpDate.format(result.downloadedAt);
+              '[$cacheId][${request.url}] Adding `${HttpHeaders.ifModifiedSinceHeader}` header');
+          request.headers[HttpHeaders.ifModifiedSinceHeader] =
+              HttpDate.format(result.downloadedAt);
         }
-;
+        ;
         final response = await super.sendWithOptions(request, options);
 
-        if(result != null && response.statusCode == 304) {
+        if (result != null && response.statusCode == 304) {
           logger?.fine(
-          "[$cacheId][${request.url}] Content not modified (status code 304), returning cache");
+              '[$cacheId][${request.url}] Content not modified (status code 304), returning cache');
           return result;
         }
 
@@ -55,10 +56,9 @@ class CacheExtension extends Extension<CacheOptions> {
         result = await CachedResponse.fromResponse(response,
             expiry: expiry, id: cacheId, request: request);
 
-
         if (options.shouldBeSaved(result)) {
           logger?.fine(
-              "[$cacheId][${request.url}] Saving resulting response to cache ...");
+              '[$cacheId][${request.url}] Saving resulting response to cache ...');
           await store.set(result);
         }
 
@@ -73,14 +73,14 @@ class CacheExtension extends Extension<CacheOptions> {
     }
 
     logger?.fine(
-        "[$cacheId][${request.url}] Not updating, try to use local cache ...");
+        '[$cacheId][${request.url}] Not updating, try to use local cache ...');
 
     if (result == null) {
       throw NoCacheAvailableException();
     }
 
     logger?.fine(
-        "[$cacheId][${request.url}] Result found in cache for corresponding request");
+        '[$cacheId][${request.url}] Result found in cache for corresponding request');
 
     return result;
   }

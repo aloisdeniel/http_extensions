@@ -5,7 +5,7 @@ import 'package:logging/logging.dart';
 import 'options.dart';
 
 class RetryExtension extends Extension<RetryOptions> {
-  final Logger logger;
+  final Logger? logger;
 
   RetryExtension(
       {RetryOptions defaultOptions = const RetryOptions(), this.logger})
@@ -36,30 +36,29 @@ class RetryExtension extends Extension<RetryOptions> {
     }
 
     if (options.retryInterval.inMilliseconds > 0) {
-      logger?.fine("Retrying request in ${options.retryInterval} ...");
+      logger?.fine('Retrying request in ${options.retryInterval} ...');
       await Future.delayed(options.retryInterval);
     }
 
     logger
-        ?.fine("Retrying request (remaining retries: ${options.retries - 1})");
+        ?.fine('Retrying request (remaining retries: ${options.retries - 1})');
     return await this.sendWithOptions(_copyRequest(request), newOptions);
   }
 
   Future<StreamedResponse> sendWithOptions(
       BaseRequest request, RetryOptions options) async {
-    
-    // Copying request a first time in case of a [StreamRequest] that should 
+    // Copying request a first time in case of a [StreamRequest] that should
     // be buffered for potential later retry.
     request = _copyRequest(request);
 
     try {
       final result = await super.sendWithOptions(request, options);
-      if (options.retries > 0 && options.retryEvaluator(null, result)) {
+      if (options.retries > 0 && options.retryEvaluator(null, result) as bool) {
         return _retry(request, options);
       }
       return result;
     } catch (e) {
-      if (options.retries > 0 && options.retryEvaluator(e, null)) {
+      if (options.retries > 0 && options.retryEvaluator(e, null) as bool) {
         return _retry(request, options);
       } else {
         rethrow;

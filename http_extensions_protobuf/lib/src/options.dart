@@ -7,10 +7,10 @@ typedef bool ShouldDeserialize(StreamedResponse response);
 
 class ProtobufOptions {
   /// The request message that will be serialized and added to request body.
-  final GeneratedMessage requestMessage;
+  final GeneratedMessage? requestMessage;
 
   /// The response message prototype that will be used for deserializing content.
-  final GeneratedMessage responseMessage;
+  final GeneratedMessage? responseMessage;
 
   /// The value of the content type header sent to server.
   final String contentType;
@@ -22,7 +22,7 @@ class ProtobufOptions {
   final ShouldDeserialize shouldDeserialize;
 
   const ProtobufOptions(
-      {this.contentType = "application/x-protobuf",
+      {this.contentType = 'application/x-protobuf',
       this.requestMessage,
       this.shouldDeserialize = defaultShouldDeserialize,
       this.shouldSerialize = defaultShouldSerialize,

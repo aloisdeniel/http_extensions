@@ -5,20 +5,21 @@ import 'package:logging/logging.dart';
 import 'options.dart';
 
 class HeadersExtension extends Extension<HeadersOptions> {
-  final Logger logger;
+  final Logger? logger;
 
-  HeadersExtension(
-      {HeadersOptions defaultOptions = const HeadersOptions(), this.logger})
-      : super(defaultOptions: defaultOptions);
+  HeadersExtension({
+    HeadersOptions defaultOptions = const HeadersOptions(),
+    this.logger,
+  }) : super(defaultOptions: defaultOptions);
 
   @override
   Future<StreamedResponse> sendWithOptions(
       BaseRequest request, HeadersOptions options) async {
     if (options.headersBuilder != null) {
-      final addedHeaders = await options.headersBuilder(request);
+      final addedHeaders = await options.headersBuilder!(request);
       if (addedHeaders.isNotEmpty) {
         request.headers.addAll(addedHeaders);
-        logger?.fine("Added headers to '${request.url}'");
+        logger?.fine('Added headers to \'${request.url}\'');
       }
     }
 
