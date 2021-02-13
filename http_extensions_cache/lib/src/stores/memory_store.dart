@@ -2,7 +2,6 @@ import 'package:http_extensions_cache/src/stores/store.dart';
 
 /// A store that keeps responses into a simple [Map] in memory.
 class MemoryCacheStore extends CacheStore {
-
   final Map<String, CachedResponse> _responses = {};
 
   MemoryCacheStore();
@@ -26,7 +25,7 @@ class MemoryCacheStore extends CacheStore {
   @override
   Future<void> updateExpiry(String id, DateTime newExpiry) {
     final cache = this._responses[id];
-    if(cache != null) {
+    if (cache != null) {
       this._responses[id] = cache.copyWith(expiry: newExpiry);
     }
 

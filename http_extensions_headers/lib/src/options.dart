@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:http/http.dart';
 
-typedef FutureOr<Map<String, String>> HeadersBuilder(BaseRequest request);
+typedef HeadersBuilder = FutureOr<Map<String, String>> Function(
+    BaseRequest request);
 
 class HeadersOptions {
   /// The builder for headers that are added to requests.

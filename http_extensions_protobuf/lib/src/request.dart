@@ -10,11 +10,11 @@ class ProtobufRequest extends BaseRequest {
   ProtobufRequest.fromRequest(BaseRequest original, this.message)
       : this.bytes = message.writeToBuffer(),
         super(original.method, original.url) {
-          this.maxRedirects = original.maxRedirects;
-          this.followRedirects = original.followRedirects;
-          this.headers.addAll(original.headers);
-          this.persistentConnection = original.persistentConnection;
-        }
+    this.maxRedirects = original.maxRedirects;
+    this.followRedirects = original.followRedirects;
+    this.headers.addAll(original.headers);
+    this.persistentConnection = original.persistentConnection;
+  }
 
   @override
   int get contentLength => this.bytes.length;

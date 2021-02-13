@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:http/http.dart';
 
-typedef FutureOr<bool> RetryEvaluator(dynamic error, StreamedResponse? response);
+typedef RetryEvaluator = FutureOr<bool> Function(
+    dynamic error, StreamedResponse? response);
 
 class RetryOptions {
   /// The number of retry in case of an error

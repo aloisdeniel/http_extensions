@@ -9,7 +9,7 @@ class BufferedStreamResponse implements StreamedResponse {
   List<int>? _bytes;
 
   Stream<List<int>?> _getStream() {
-    if(_bytes != null) {
+    if (_bytes != null) {
       return Stream.fromIterable([_bytes]);
     }
 
@@ -43,5 +43,5 @@ class BufferedStreamResponse implements StreamedResponse {
   BaseRequest? get request => base.request;
 
   @override
-  int get statusCode  => base.statusCode;
+  int get statusCode => base.statusCode;
 }

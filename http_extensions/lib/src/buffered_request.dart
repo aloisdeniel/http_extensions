@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:http/http.dart';
 
 /// Allows to read multiple times the content of a [StreamedRequest].
-/// 
+///
 /// The [base.finalize] method is called on first call to [finalize] and
 /// the result is stored to be returned on each later [finalize] calls.
 class BufferedRequest extends BaseRequest {
