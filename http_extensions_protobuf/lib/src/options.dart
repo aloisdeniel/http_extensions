@@ -1,9 +1,9 @@
 import 'package:http/http.dart';
 import 'package:protobuf/protobuf.dart';
 
-typedef bool ShouldSerialize(BaseRequest request);
+typedef ShouldSerialize = bool Function(BaseRequest request);
 
-typedef bool ShouldDeserialize(StreamedResponse response);
+typedef ShouldDeserialize = bool Function(StreamedResponse response);
 
 class ProtobufOptions {
   /// The request message that will be serialized and added to request body.

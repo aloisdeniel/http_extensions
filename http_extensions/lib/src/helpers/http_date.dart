@@ -5,10 +5,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/**
- * Utility functions for working with dates with HTTP specific date
- * formats.
- */
+/// Utility functions for working with dates with HTTP specific date
+/// formats.
 class HttpDate {
   // From RFC-2616 section '3.3.1 Full Date',
   // http://tools.ietf.org/html/rfc2616#section-3.3.1
@@ -33,14 +31,12 @@ class HttpDate {
   //              | 'May' | 'Jun' | 'Jul' | 'Aug'
   //              | 'Sep' | 'Oct' | 'Nov' | 'Dec'
 
-  /**
-   * Format a date according to
-   * [RFC-1123](http://tools.ietf.org/html/rfc1123 'RFC-1123'),
-   * e.g. `Thu, 1 Jan 1970 00:00:00 GMT`.
-   */
+  /// Format a date according to
+  /// [RFC-1123](http://tools.ietf.org/html/rfc1123 'RFC-1123'),
+  /// e.g. `Thu, 1 Jan 1970 00:00:00 GMT`.
   static String format(DateTime date) {
-    const List wkday = const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const List month = const [
+    const List wkday = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const List month = [
       'Jan',
       'Feb',
       'Mar',
@@ -56,7 +52,7 @@ class HttpDate {
     ];
 
     DateTime d = date.toUtc();
-    StringBuffer sb = new StringBuffer()
+    StringBuffer sb = StringBuffer()
       ..write(wkday[d.weekday - 1])
       ..write(', ')
       ..write(d.day <= 9 ? '0' : '')
@@ -75,24 +71,22 @@ class HttpDate {
     return sb.toString();
   }
 
-  /**
-   * Parse a date string in either of the formats
-   * [RFC-1123](http://tools.ietf.org/html/rfc1123 'RFC-1123'),
-   * [RFC-850](http://tools.ietf.org/html/rfc850 'RFC-850') or
-   * ANSI C's asctime() format. These formats are listed here.
-   *
-   *     Thu, 1 Jan 1970 00:00:00 GMT
-   *     Thursday, 1-Jan-1970 00:00:00 GMT
-   *     Thu Jan  1 00:00:00 1970
-   *
-   * For more information see [RFC-2616 section
-   * 3.1.1](http://tools.ietf.org/html/rfc2616#section-3.3.1
-   * 'RFC-2616 section 3.1.1').
-   */
+  /// Parse a date string in either of the formats
+  /// [RFC-1123](http://tools.ietf.org/html/rfc1123 'RFC-1123'),
+  /// [RFC-850](http://tools.ietf.org/html/rfc850 'RFC-850') or
+  /// ANSI C's asctime() format. These formats are listed here.
+  ///
+  ///     Thu, 1 Jan 1970 00:00:00 GMT
+  ///     Thursday, 1-Jan-1970 00:00:00 GMT
+  ///     Thu Jan  1 00:00:00 1970
+  ///
+  /// For more information see [RFC-2616 section
+  /// 3.1.1](http://tools.ietf.org/html/rfc2616#section-3.3.1
+  /// 'RFC-2616 section 3.1.1').
   static DateTime parse(String date) {
     final int SP = 32;
-    const List wkdays = const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const List weekdays = const [
+    const List wkdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const List weekdays = [
       'Monday',
       'Tuesday',
       'Wednesday',
@@ -101,7 +95,7 @@ class HttpDate {
       'Saturday',
       'Sunday'
     ];
-    const List months = const [
+    const List months = [
       'Jan',
       'Feb',
       'Mar',
@@ -115,7 +109,7 @@ class HttpDate {
       'Nov',
       'Dec'
     ];
-    const List wkdaysLowerCase = const [
+    const List wkdaysLowerCase = [
       'mon',
       'tue',
       'wed',
@@ -124,7 +118,7 @@ class HttpDate {
       'sat',
       'sun'
     ];
-    const List weekdaysLowerCase = const [
+    const List weekdaysLowerCase = [
       'monday',
       'tuesday',
       'wednesday',
@@ -133,7 +127,7 @@ class HttpDate {
       'saturday',
       'sunday'
     ];
-    const List monthsLowerCase = const [
+    const List monthsLowerCase = [
       'jan',
       'feb',
       'mar',
@@ -158,11 +152,11 @@ class HttpDate {
 
     void expect(String s) {
       if (date.length - index < s.length) {
-        throw new Exception('Invalid HTTP date $date');
+        throw Exception('Invalid HTTP date $date');
       }
       String tmp = date.substring(index, index + s.length);
       if (tmp != s) {
-        throw new Exception('Invalid HTTP date $date');
+        throw Exception('Invalid HTTP date $date');
       }
       index += s.length;
     }
@@ -173,7 +167,7 @@ class HttpDate {
       int pos = date.indexOf(',', index);
       if (pos == -1) {
         int pos = date.indexOf(' ', index);
-        if (pos == -1) throw new Exception('Invalid HTTP date $date');
+        if (pos == -1) throw Exception('Invalid HTTP date $date');
         tmp = date.substring(index, pos);
         index = pos + 1;
         weekday = wkdays.indexOf(tmp);
@@ -195,17 +189,17 @@ class HttpDate {
           return weekday;
         }
       }
-      throw new Exception('Invalid HTTP date $date');
+      throw Exception('Invalid HTTP date $date');
     }
 
     int expectMonth(String separator) {
       int pos = date.indexOf(separator, index);
-      if (pos - index != 3) throw new Exception('Invalid HTTP date $date');
+      if (pos - index != 3) throw Exception('Invalid HTTP date $date');
       tmp = date.substring(index, pos);
       index = pos + 1;
       int month = months.indexOf(tmp);
       if (month != -1) return month;
-      throw new Exception('Invalid HTTP date $date');
+      throw Exception('Invalid HTTP date $date');
     }
 
     int expectNum(String separator) {
@@ -221,13 +215,13 @@ class HttpDate {
         int value = int.parse(tmp);
         return value;
       } on FormatException catch (e) {
-        throw new Exception('Invalid HTTP date $date');
+        throw Exception('Invalid HTTP date $date');
       }
     }
 
     void expectEnd() {
       if (index != date.length) {
-        throw new Exception('Invalid HTTP date $date');
+        throw Exception('Invalid HTTP date $date');
       }
     }
 
@@ -257,12 +251,12 @@ class HttpDate {
       expect('GMT');
     }
     expectEnd();
-    return new DateTime.utc(year, month + 1, day, hours, minutes, seconds, 0);
+    return DateTime.utc(year, month + 1, day, hours, minutes, seconds, 0);
   }
 
   // Parse a cookie date string.
   static DateTime _parseCookieDate(String date) {
-    const List monthsLowerCase = const [
+    const List monthsLowerCase = [
       'jan',
       'feb',
       'mar',
@@ -280,7 +274,7 @@ class HttpDate {
     int position = 0;
 
     void error() {
-      throw new Exception('Invalid cookie date $date');
+      throw Exception('Invalid cookie date $date');
     }
 
     bool isEnd() => position == date.length;
@@ -384,6 +378,6 @@ class HttpDate {
     if (minute > 59) error();
     if (second > 59) error();
 
-    return new DateTime.utc(year, month, dayOfMonth, hour, minute, second, 0);
+    return DateTime.utc(year, month, dayOfMonth, hour, minute, second, 0);
   }
 }

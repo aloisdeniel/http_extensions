@@ -5,7 +5,8 @@ class ExtensionRequest implements http.BaseRequest {
   final http.BaseRequest request;
   final List<dynamic> options;
 
-  ExtensionRequest({required this.request, List<dynamic>? options}) : this.options = options ?? [];
+  ExtensionRequest({required this.request, List<dynamic>? options})
+      : this.options = options ?? [];
 
   Map<String, String> get headers => request.headers;
 
@@ -34,8 +35,7 @@ class ExtensionRequest implements http.BaseRequest {
   @override
   bool get persistentConnection => request.persistentConnection;
   @override
-  set persistentConnection(bool value) =>
-      request.persistentConnection = value;
+  set persistentConnection(bool value) => request.persistentConnection = value;
 
   @override
   set contentLength(int? value) => request.contentLength = value;

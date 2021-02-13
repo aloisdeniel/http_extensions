@@ -25,7 +25,8 @@ class HelloRequest extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   HelloRequest clone() => HelloRequest()..mergeFromMessage(this);
   HelloRequest copyWith(void Function(HelloRequest) updates) =>
-      super.copyWith((message) => updates(message as HelloRequest)) as HelloRequest;
+      super.copyWith((message) => updates(message as HelloRequest))
+          as HelloRequest;
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static HelloRequest create() => HelloRequest._();

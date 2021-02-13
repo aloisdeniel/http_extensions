@@ -24,14 +24,16 @@ class CachedResponse implements StreamedResponse {
     required this.persistentConnection,
     required this.reasonPhrase,
     required this.statusCode,
-  })  : this.downloadedAt = downloadedAt ?? DateTime.now(),
+  })   : this.downloadedAt = downloadedAt ?? DateTime.now(),
         this.contentLength = bytes.length;
 
-  static Future<CachedResponse> fromResponse(StreamedResponse response, {
+  static Future<CachedResponse> fromResponse(
+    StreamedResponse response, {
     required String id,
     required BaseRequest request,
     required DateTime expiry,
-    DateTime? downloadedAt,}) async {
+    DateTime? downloadedAt,
+  }) async {
     final bytes = await response.stream.toBytes();
 
     return CachedResponse(

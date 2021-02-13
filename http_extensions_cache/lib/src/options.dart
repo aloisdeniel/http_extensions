@@ -3,9 +3,9 @@ import 'package:uuid/uuid.dart';
 
 import 'stores/store.dart';
 
-typedef String CacheKeyBuilder(BaseRequest request);
+typedef CacheKeyBuilder = String Function(BaseRequest request);
 
-typedef bool CacheShouldBeSaved(StreamedResponse response);
+typedef CacheShouldBeSaved = bool Function(StreamedResponse response);
 
 class CacheOptions {
   /// The duration after the cached result of the request
