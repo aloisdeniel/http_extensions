@@ -1,5 +1,4 @@
 import 'package:http/http.dart';
-import 'package:meta/meta.dart';
 
 abstract class CacheStore {
   const CacheStore();
@@ -9,7 +8,7 @@ abstract class CacheStore {
   Future<void> delete(String id);
   Future<void> clean();
   Future<void> invalidate(String id) =>
-      this.updateExpiry(id, DateTime.fromMillisecondsSinceEpoch(0));
+      updateExpiry(id, DateTime.fromMillisecondsSinceEpoch(0));
 }
 
 class CachedResponse implements StreamedResponse {
@@ -24,8 +23,8 @@ class CachedResponse implements StreamedResponse {
     required this.persistentConnection,
     required this.reasonPhrase,
     required this.statusCode,
-  })   : this.downloadedAt = downloadedAt ?? DateTime.now(),
-        this.contentLength = bytes.length;
+  })   : downloadedAt = downloadedAt ?? DateTime.now(),
+        contentLength = bytes.length;
 
   static Future<CachedResponse> fromResponse(
     StreamedResponse response, {
@@ -52,9 +51,11 @@ class CachedResponse implements StreamedResponse {
 
   final String id;
   final List<int> bytes;
-  final BaseRequest request;
   final DateTime expiry;
   final DateTime downloadedAt;
+
+  @override
+  final BaseRequest request;
 
   @override
   final int contentLength;
@@ -75,7 +76,7 @@ class CachedResponse implements StreamedResponse {
   final int statusCode;
 
   @override
-  ByteStream get stream => ByteStream(Stream.fromIterable([this.bytes]));
+  ByteStream get stream => ByteStream(Stream.fromIterable([bytes]));
 
   CachedResponse copyWith({
     String? id,

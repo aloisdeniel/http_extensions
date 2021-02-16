@@ -47,13 +47,7 @@ class CacheOptions {
       this.keyBuilder = defaultCacheKeyBuilder,
       this.shouldBeSaved = defaultShouldBeSaved,
       this.store,
-      this.expiry = const Duration(minutes: 5)})
-      : assert(forceUpdate != null),
-        assert(ignoreCache != null),
-        assert(keyBuilder != null),
-        assert(keyBuilder != null),
-        assert(shouldBeSaved != null),
-        assert(expiry != null);
+      this.expiry = const Duration(minutes: 5)});
 
   static final uuid = Uuid();
 
