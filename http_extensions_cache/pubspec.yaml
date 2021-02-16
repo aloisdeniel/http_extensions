@@ -14,6 +14,6 @@ dependencies:
   http_extensions: ^1.0.0
   logging: ^1.0.0
 
-# dependency_overrides:
-#  http_extensions: 
-#    path: ../http_extensions
+dependency_overrides:
+ http_extensions: 
+   path: ../http_extensions
