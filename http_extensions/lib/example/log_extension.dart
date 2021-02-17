@@ -12,6 +12,7 @@ class LogExtension extends Extension<LogOptions> {
 
   int _requestId = 0;
 
+  @override
   Future<StreamedResponse> sendWithOptions(
       BaseRequest request, LogOptions options) async {
     if (!options.isEnabled) {

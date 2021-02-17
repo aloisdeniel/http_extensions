@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 import 'memory_store.dart';
 import 'store.dart';
 

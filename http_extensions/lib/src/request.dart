@@ -1,15 +1,18 @@
 import 'package:http/http.dart' as http;
-import 'package:meta/meta.dart';
 
 class ExtensionRequest implements http.BaseRequest {
   final http.BaseRequest request;
   final List<dynamic> options;
 
-  ExtensionRequest({required this.request, List<dynamic>? options})
-      : this.options = options ?? [];
+  ExtensionRequest({
+    required this.request,
+    List<dynamic>? options,
+  }) : options = options ?? [];
 
+  @override
   Map<String, String> get headers => request.headers;
 
+  @override
   int? get contentLength => request.contentLength;
 
   TOptions? option<TOptions>() =>
@@ -41,14 +44,14 @@ class ExtensionRequest implements http.BaseRequest {
   set contentLength(int? value) => request.contentLength = value;
 
   @override
-  bool get finalized => this.request.finalized;
+  bool get finalized => request.finalized;
 
   @override
-  String get method => this.request.method;
+  String get method => request.method;
 
   @override
-  Future<http.StreamedResponse> send() => this.request.send();
+  Future<http.StreamedResponse> send() => request.send();
 
   @override
-  Uri get url => this.request.url;
+  Uri get url => request.url;
 }

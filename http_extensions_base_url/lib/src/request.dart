@@ -1,5 +1,4 @@
 import 'package:http/http.dart';
-import 'package:meta/meta.dart';
 
 class BaseUrlRequest implements BaseRequest {
   final Uri baseUrl;
@@ -10,18 +9,26 @@ class BaseUrlRequest implements BaseRequest {
 
   @override
   int? get contentLength => base.contentLength;
+
+  @override
   set contentLength(int? v) => base.contentLength = v;
 
   @override
   bool get followRedirects => base.followRedirects;
+
+  @override
   set followRedirects(bool v) => base.followRedirects = v;
 
   @override
   int get maxRedirects => base.maxRedirects;
+
+  @override
   set maxRedirects(int v) => base.maxRedirects = v;
 
   @override
   bool get persistentConnection => base.persistentConnection;
+
+  @override
   set persistentConnection(bool v) => base.persistentConnection = v;
 
   @override

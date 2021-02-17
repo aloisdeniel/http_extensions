@@ -11,7 +11,7 @@ class HeadersOptions {
 
   const HeadersOptions({this.headersBuilder});
 
-  const HeadersOptions.none() : this.headersBuilder = noneHeadersBuilder;
+  const HeadersOptions.none() : headersBuilder = noneHeadersBuilder;
 
   static FutureOr<Map<String, String>> noneHeadersBuilder(BaseRequest _) =>
       <String, String>{};
