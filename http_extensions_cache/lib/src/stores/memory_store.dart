@@ -2,20 +2,19 @@ import 'package:http_extensions_cache/src/stores/store.dart';
 
 /// A store that keeps responses into a simple [Map] in memory.
 class MemoryCacheStore extends CacheStore {
-
-  final Map<String, CachedResponse> _responses = {};
+  /// Map could contain a CachedResponse at a given key, or null.
+  final Map<String, CachedResponse?> _responses = {};
 
   MemoryCacheStore();
 
   @override
-  Future<void> clean() {
+  Future<void> clean() async {
     _responses.clear();
-    return Future.value();
   }
 
   @override
-  Future<CachedResponse> get(String id) {
-    return Future.value(_responses[id]);
+  Future<CachedResponse?> get(String id) async {
+    return _responses[id];
   }
 
   @override
@@ -24,18 +23,16 @@ class MemoryCacheStore extends CacheStore {
   }
 
   @override
-  Future<void> updateExpiry(String id, DateTime newExpiry) {
-    final cache = this._responses[id];
-    if(cache != null) {
-      this._responses[id] = cache.copyWith(expiry: newExpiry);
-    }
+  Future<void> updateExpiry(String id, DateTime newExpiry) async {
+    final cache = _responses[id];
 
-    return Future.value();
+    if (cache != null) {
+      _responses[id] = cache.copyWith(expiry: newExpiry);
+    }
   }
 
   @override
-  Future<void> delete(String id) {
+  Future<void> delete(String id) async {
     _responses.remove(id);
-    return Future.value();
   }
 }

@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:http/http.dart';
 
-typedef FutureOr<bool> RetryEvaluator(dynamic error, StreamedResponse response);
+typedef RetryEvaluator = FutureOr<bool> Function(
+    dynamic error, StreamedResponse? response);
 
 class RetryOptions {
   /// The number of retry in case of an error
@@ -20,11 +21,11 @@ class RetryOptions {
   RetryEvaluator get retryEvaluator =>
       this._retryEvaluator ?? defaultRetryEvaluator;
 
-  final RetryEvaluator _retryEvaluator;
+  final RetryEvaluator? _retryEvaluator;
 
   const RetryOptions(
       {this.retries = 3,
-      RetryEvaluator retryEvaluator,
+      RetryEvaluator? retryEvaluator,
       this.retryInterval = const Duration(seconds: 5)})
       : assert(retries != null),
         assert(retryInterval != null),
@@ -37,9 +38,9 @@ class RetryOptions {
   }
 
   RetryOptions copyWith({
-    int retries,
-    Duration retryInterval,
-    RetryEvaluator retryEvaluator,
+    int? retries,
+    Duration? retryInterval,
+    RetryEvaluator? retryEvaluator,
   }) =>
       RetryOptions(
         retries: retries ?? this.retries,
@@ -50,7 +51,7 @@ class RetryOptions {
   /// Returns [true] only if the response hasn't been cancelled or got
   /// a bas status code.
   static FutureOr<bool> defaultRetryEvaluator(
-      dynamic error, StreamedResponse response) {
+      dynamic error, StreamedResponse? response) {
     return error != null;
   }
 }

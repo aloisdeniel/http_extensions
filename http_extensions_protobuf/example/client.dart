@@ -5,7 +5,7 @@ import 'package:http/http.dart';
 
 import 'hello.pb.dart';
 
-main() async {
+void main() async {
   // Displaying logs
   Logger.root.level = Level.ALL;
   Logger.root.onRecord.listen((record) {
@@ -13,26 +13,24 @@ main() async {
   });
 
   final client = ExtendedClient(
-    inner: Client(),
+    inner: Client() as BaseClient,
     extensions: [
-      ProtobufExtension(logger: Logger("Cache")),
+      ProtobufExtension(logger: Logger('Cache')),
     ],
   );
 
   // The new request will get data and add it to cache
   final proto = ProtobufOptions(
-    requestMessage: (HelloRequest()
-      ..name = "John"
-    ),
+    requestMessage: (HelloRequest()..name = 'John'),
     responseMessage: HelloReply(),
   );
 
   final response = await client.getWithOptions(
-    "http://localhost:8080",
+    'http://localhost:8080',
     options: [proto],
   );
 
   if (response.statusCode == 200) {
-    print("Reply: ${proto.responseMessage}");
+    print('Reply: ${proto.responseMessage}');
   }
 }

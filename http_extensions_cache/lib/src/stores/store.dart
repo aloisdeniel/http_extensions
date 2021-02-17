@@ -1,37 +1,38 @@
 import 'package:http/http.dart';
-import 'package:meta/meta.dart';
 
 abstract class CacheStore {
   const CacheStore();
-  Future<CachedResponse> get(String id);
+  Future<CachedResponse?> get(String id);
   Future<void> set(CachedResponse response);
   Future<void> updateExpiry(String id, DateTime newExpiry);
   Future<void> delete(String id);
   Future<void> clean();
   Future<void> invalidate(String id) =>
-      this.updateExpiry(id, DateTime.fromMillisecondsSinceEpoch(0));
+      updateExpiry(id, DateTime.fromMillisecondsSinceEpoch(0));
 }
 
 class CachedResponse implements StreamedResponse {
   CachedResponse({
-    @required this.id,
-    @required this.bytes,
-    @required this.request,
-    @required this.expiry,
-    @required DateTime downloadedAt,
-    @required this.headers,
-    @required this.isRedirect,
-    @required this.persistentConnection,
-    @required this.reasonPhrase,
-    @required this.statusCode,
-  })  : this.downloadedAt = downloadedAt ?? DateTime.now(),
-        this.contentLength = bytes.length;
+    required this.id,
+    required this.bytes,
+    required this.request,
+    required this.expiry,
+    required DateTime? downloadedAt,
+    required this.headers,
+    required this.isRedirect,
+    required this.persistentConnection,
+    required this.reasonPhrase,
+    required this.statusCode,
+  })   : downloadedAt = downloadedAt ?? DateTime.now(),
+        contentLength = bytes.length;
 
-  static Future<CachedResponse> fromResponse(StreamedResponse response, {
-    @required String id,
-    @required BaseRequest request,
-    @required DateTime expiry,
-    DateTime downloadedAt,}) async {
+  static Future<CachedResponse> fromResponse(
+    StreamedResponse response, {
+    required String id,
+    required BaseRequest request,
+    required DateTime expiry,
+    DateTime? downloadedAt,
+  }) async {
     final bytes = await response.stream.toBytes();
 
     return CachedResponse(
@@ -50,9 +51,11 @@ class CachedResponse implements StreamedResponse {
 
   final String id;
   final List<int> bytes;
-  final BaseRequest request;
   final DateTime expiry;
   final DateTime downloadedAt;
+
+  @override
+  final BaseRequest request;
 
   @override
   final int contentLength;
@@ -67,25 +70,25 @@ class CachedResponse implements StreamedResponse {
   final bool persistentConnection;
 
   @override
-  final String reasonPhrase;
+  final String? reasonPhrase;
 
   @override
   final int statusCode;
 
   @override
-  ByteStream get stream => ByteStream(Stream.fromIterable([this.bytes]));
+  ByteStream get stream => ByteStream(Stream.fromIterable([bytes]));
 
   CachedResponse copyWith({
-    String id,
-    List<int> bytes,
-    BaseRequest request,
-    DateTime expiry,
-    DateTime downloadedAt,
-    Map<String, String> headers,
-    bool isRedirect,
-    bool persistentConnection,
-    String reasonPhrase,
-    int statusCode,
+    String? id,
+    List<int>? bytes,
+    BaseRequest? request,
+    DateTime? expiry,
+    DateTime? downloadedAt,
+    Map<String, String>? headers,
+    bool? isRedirect,
+    bool? persistentConnection,
+    String? reasonPhrase,
+    int? statusCode,
   }) =>
       CachedResponse(
         id: id ?? this.id,

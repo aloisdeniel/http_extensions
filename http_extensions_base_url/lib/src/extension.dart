@@ -7,9 +7,9 @@ import 'options.dart';
 import 'request.dart';
 
 class BaseUrlExtension extends Extension<BaseUrlOptions> {
-  final Logger logger;
+  final Logger? logger;
 
-  BaseUrlExtension({@required BaseUrlOptions defaultOptions, this.logger})
+  BaseUrlExtension({required BaseUrlOptions defaultOptions, this.logger})
       : super(defaultOptions: defaultOptions);
 
   @override
@@ -20,7 +20,7 @@ class BaseUrlExtension extends Extension<BaseUrlOptions> {
       final baseUrl = BaseUrlRequest(base: request, baseUrl: options.url);
 
       logger?.fine(
-          "Base url '${options.url}' appended to path '${originalUrl}' : ${baseUrl.url}");
+          'Base url \'${options.url}\' appended to path \'${originalUrl}\' : ${baseUrl.url}');
 
       request = baseUrl;
     }

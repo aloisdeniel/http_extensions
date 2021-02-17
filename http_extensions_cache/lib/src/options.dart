@@ -3,17 +3,16 @@ import 'package:uuid/uuid.dart';
 
 import 'stores/store.dart';
 
-typedef String CacheKeyBuilder(BaseRequest request);
+typedef CacheKeyBuilder = String Function(BaseRequest request);
 
-typedef bool CacheShouldBeSaved(StreamedResponse response);
+typedef CacheShouldBeSaved = bool Function(StreamedResponse response);
 
 class CacheOptions {
-
-  /// The duration after the cached result of the request 
+  /// The duration after the cached result of the request
   /// will be expired.
   final Duration expiry;
 
-  /// Forces to request a new value, even if an valid 
+  /// Forces to request a new value, even if an valid
   /// cache is available.
   final bool forceUpdate;
 
@@ -30,11 +29,11 @@ class CacheOptions {
   final bool returnCacheOnError;
 
   /// The store used for caching data.
-  final CacheStore store;
+  final CacheStore? store;
 
   /// Builds the unqie key used for indexing a request in cache.
   ///
-  /// Defaults to `(request) => "${request.method}_${uuid.v5(Uuid.NAMESPACE_URL, request.uri.toString())}"`
+  /// Defaults to `(request) => '${request.method}_${uuid.v5(Uuid.NAMESPACE_URL, request.uri.toString())}'`
   final CacheKeyBuilder keyBuilder;
 
   /// A way of filtering responses (for exemple regarding the result status code, or the content length).
@@ -44,17 +43,11 @@ class CacheOptions {
       {this.forceUpdate = false,
       this.forceCache = false,
       this.returnCacheOnError = true,
-      this.ignoreCache  = false,
+      this.ignoreCache = false,
       this.keyBuilder = defaultCacheKeyBuilder,
       this.shouldBeSaved = defaultShouldBeSaved,
       this.store,
-      this.expiry = const Duration(minutes: 5)})
-      : assert(forceUpdate != null),
-        assert(ignoreCache != null),
-        assert(keyBuilder != null),
-        assert(keyBuilder != null),
-        assert(shouldBeSaved != null),
-        assert(expiry != null);
+      this.expiry = const Duration(minutes: 5)});
 
   static final uuid = Uuid();
 
@@ -63,6 +56,6 @@ class CacheOptions {
   }
 
   static String defaultCacheKeyBuilder(BaseRequest request) {
-    return "${request.method}_${uuid.v5(Uuid.NAMESPACE_URL, request.url.toString())}";
+    return '${request.method}_${uuid.v5(Uuid.NAMESPACE_URL, request.url.toString())}';
   }
 }

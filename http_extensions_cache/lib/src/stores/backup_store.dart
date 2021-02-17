@@ -7,30 +7,31 @@ class BackupCacheStore extends CacheStore {
   final CacheStore primaryStore;
   final CacheStore backupStore;
 
-  BackupCacheStore({@required this.backupStore, CacheStore primaryStore})
-      : assert(backupStore != null),
-        this.primaryStore = primaryStore ?? MemoryCacheStore();
+  BackupCacheStore({
+    required this.backupStore,
+    CacheStore? primaryStore,
+  }) : primaryStore = primaryStore ?? MemoryCacheStore();
 
   @override
   Future<void> clean() {
-    this.backupStore.clean();
-    return this.primaryStore.clean();
+    backupStore.clean();
+    return primaryStore.clean();
   }
 
   @override
   Future<void> delete(String id) {
-    this.backupStore.delete(id);
-    return this.primaryStore.delete(id);
+    backupStore.delete(id);
+    return primaryStore.delete(id);
   }
 
   @override
-  Future<CachedResponse> get(String id) async {
-    final existing = await this.primaryStore.get(id);
+  Future<CachedResponse?> get(String id) async {
+    final existing = await primaryStore.get(id);
     if (existing != null) {
       return existing;
     }
 
-    final backup = await this.backupStore.get(id);
+    final backup = await backupStore.get(id);
     if (backup != null) {
       await primaryStore.set(backup);
       return backup;
@@ -41,13 +42,13 @@ class BackupCacheStore extends CacheStore {
 
   @override
   Future<void> set(CachedResponse response) {
-    this.backupStore.set(response);
-    return this.primaryStore.set(response);
+    backupStore.set(response);
+    return primaryStore.set(response);
   }
 
   @override
   Future<void> updateExpiry(String id, DateTime newExpiry) {
-    this.backupStore.updateExpiry(id, newExpiry);
-    return this.primaryStore.updateExpiry(id, newExpiry);
+    backupStore.updateExpiry(id, newExpiry);
+    return primaryStore.updateExpiry(id, newExpiry);
   }
 }

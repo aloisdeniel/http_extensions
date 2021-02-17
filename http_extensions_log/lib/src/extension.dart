@@ -7,14 +7,14 @@ import 'package:logging/logging.dart';
 import 'options.dart';
 
 class LogExtension extends Extension<LogOptions> {
-  final Logger logger;
+  final Logger? logger;
 
   LogExtension({LogOptions defaultOptions = const LogOptions(), this.logger})
       : super(defaultOptions: defaultOptions);
 
   void log(String message, LogOptions options) {
     if (logger != null) {
-      logger.log(options.level, message);
+      logger!.log(options.level, message);
     } else {
       print(message);
     }
@@ -22,28 +22,30 @@ class LogExtension extends Extension<LogOptions> {
 
   int _id = 0;
 
-  Future<String> _formatRequest(int id, BaseRequest request, LogOptions options) async {
+  Future<String> _formatRequest(
+      int id, BaseRequest request, LogOptions options) async {
     if (request is ExtensionRequest) {
       return _formatRequest(id, request.request, options);
     }
 
     final requestLog = StringBuffer();
 
-    requestLog.writeln("-> REQ($id) [ ${request.method} | ${request.url} ]");
+    requestLog.writeln('-> REQ($id) [ ${request.method} | ${request.url} ]');
     if (options.logHeaders) {
       requestLog
-          .writeln("  * headers: ${request.headers.isEmpty ? "empty" : ""}");
+          .writeln('  * headers: ${request.headers.isEmpty ? 'empty' : ''}');
       request.headers.forEach((k, v) {
-        requestLog.writeln("    * $k: $v");
+        requestLog.writeln('    * $k: $v');
       });
     }
 
     if (options.logContent) {
-      requestLog.writeln("  * content-length: ${request.contentLength}");
-      
+      requestLog.writeln('  * content-length: ${request.contentLength}');
+
       final bytes = await request.finalize();
       final content = await bytes.toBytes();
-      requestLog.writeln("  * content: ${utf8.decode(content, allowMalformed: true)}");
+      requestLog.writeln(
+          '  * content: ${utf8.decode(content, allowMalformed: true)}');
     }
 
     return requestLog.toString();
@@ -54,22 +56,23 @@ class LogExtension extends Extension<LogOptions> {
     final requestLog = StringBuffer();
 
     requestLog.writeln(
-        "<- RES($id) [ ${response.request.method} | ${response.request.url}]");
+        '<- RES($id) [ ${response.request!.method} | ${response.request!.url}]');
 
-    requestLog.writeln("  * status-code: ${response.statusCode}");
+    requestLog.writeln('  * status-code: ${response.statusCode}');
 
     if (options.logHeaders) {
       requestLog
-          .writeln("  * headers: ${response.headers.isEmpty ? "empty" : ""}");
+          .writeln('  * headers: ${response.headers.isEmpty ? 'empty' : ''}');
       response.headers.forEach((k, v) {
-        requestLog.writeln("    * $k: $v");
+        requestLog.writeln('    * $k: $v');
       });
     }
 
     if (options.logContent) {
-      requestLog.writeln("  * content-length: ${response.contentLength}");
+      requestLog.writeln('  * content-length: ${response.contentLength}');
       final content = await response.stream.toBytes();
-      requestLog.writeln("  * content: ${utf8.decode(content, allowMalformed: true)}");
+      requestLog.writeln(
+          '  * content: ${utf8.decode(content, allowMalformed: true)}');
     }
 
     return requestLog.toString();
@@ -78,14 +81,14 @@ class LogExtension extends Extension<LogOptions> {
   String _formatError(int id, BaseRequest request, dynamic error,
       StackTrace stackTrace, LogOptions options) {
     final errorLog = StringBuffer();
-    errorLog.writeln("!) ERR($id) [ ${request.method} | ${request.url} ]");
+    errorLog.writeln('!) ERR($id) [ ${request.method} | ${request.url} ]');
 
     if (error != null) {
-      errorLog.writeln("  * error: ${error}");
+      errorLog.writeln('  * error: ${error}');
     }
 
     if (stackTrace != null) {
-      errorLog.writeln("  * stack-trace: ${stackTrace}");
+      errorLog.writeln('  * stack-trace: ${stackTrace}');
     }
 
     return errorLog.toString();
@@ -100,8 +103,8 @@ class LogExtension extends Extension<LogOptions> {
     final id = _id++;
 
     if (options.logContent) {
-        request = BufferedRequest(request);
-      }
+      request = BufferedRequest(request);
+    }
 
     // Logging request
     final requestLog = await _formatRequest(id, request, options);

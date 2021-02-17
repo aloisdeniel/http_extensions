@@ -6,26 +6,26 @@ class BufferedStreamResponse implements StreamedResponse {
 
   final StreamedResponse base;
 
-  List<int> _bytes;
+  List<int>? _bytes;
 
-  Stream<List<int>> _getStream() {
-    if(_bytes != null) {
+  Stream<List<int>?> _getStream() {
+    if (_bytes != null) {
       return Stream.fromIterable([_bytes]);
     }
 
     return Stream.fromFuture(_readBytes());
   }
 
-  Future<List<int>> _readBytes() async {
+  Future<List<int>?> _readBytes() async {
     _bytes = await base.stream.toBytes();
     return _bytes;
   }
 
   @override
-  ByteStream get stream => ByteStream(_getStream());
+  ByteStream get stream => ByteStream(_getStream() as Stream<List<int>>);
 
   @override
-  int get contentLength => base.contentLength;
+  int? get contentLength => base.contentLength;
 
   @override
   Map<String, String> get headers => base.headers;
@@ -37,11 +37,11 @@ class BufferedStreamResponse implements StreamedResponse {
   bool get persistentConnection => base.persistentConnection;
 
   @override
-  String get reasonPhrase => base.reasonPhrase;
+  String? get reasonPhrase => base.reasonPhrase;
 
   @override
-  BaseRequest get request => base.request;
+  BaseRequest? get request => base.request;
 
   @override
-  int get statusCode  => base.statusCode;
+  int get statusCode => base.statusCode;
 }

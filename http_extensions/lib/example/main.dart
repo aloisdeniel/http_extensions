@@ -4,18 +4,18 @@ import 'log_extension.dart';
 
 Future main() async {
   final client = ExtendedClient(
-    inner: Client(),
+    inner: Client() as BaseClient,
     extensions: [
       LogExtension(),
     ],
   );
 
   // Default options
-  final defaultResult = await client.get("https://www.google.com");
-  print("default status code: ${defaultResult.statusCode}");
+  final defaultResult = await client.get(Uri.parse('https://www.google.com'));
+  print('default status code: ${defaultResult.statusCode}');
 
   // Custom options (not logged)
-  final customResult = await client.getWithOptions("https://www.google.com",
+  final customResult = await client.getWithOptions('https://www.google.com',
       options: [LogOptions(isEnabled: false)]);
-  print("default status code: ${customResult.statusCode}");
+  print('default status code: ${customResult.statusCode}');
 }
