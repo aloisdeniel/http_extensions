@@ -7,9 +7,10 @@ import 'options.dart';
 class RetryExtension extends Extension<RetryOptions> {
   final Logger? logger;
 
-  RetryExtension(
-      {RetryOptions defaultOptions = const RetryOptions(), this.logger})
-      : super(defaultOptions: defaultOptions);
+  RetryExtension({
+    RetryOptions defaultOptions = const RetryOptions(),
+    this.logger,
+  }) : super(defaultOptions: defaultOptions);
 
   BaseRequest _copyRequest(BaseRequest original) {
     if (original is ExtensionRequest) {
@@ -45,6 +46,7 @@ class RetryExtension extends Extension<RetryOptions> {
     return await this.sendWithOptions(_copyRequest(request), newOptions);
   }
 
+  @override
   Future<StreamedResponse> sendWithOptions(
       BaseRequest request, RetryOptions options) async {
     // Copying request a first time in case of a [StreamRequest] that should

@@ -1,7 +1,6 @@
 import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 
 import 'options.dart';
 import 'request.dart';
@@ -9,8 +8,10 @@ import 'request.dart';
 class BaseUrlExtension extends Extension<BaseUrlOptions> {
   final Logger? logger;
 
-  BaseUrlExtension({required BaseUrlOptions defaultOptions, this.logger})
-      : super(defaultOptions: defaultOptions);
+  BaseUrlExtension({
+    required BaseUrlOptions defaultOptions,
+    this.logger,
+  }) : super(defaultOptions: defaultOptions);
 
   @override
   Future<StreamedResponse> sendWithOptions(

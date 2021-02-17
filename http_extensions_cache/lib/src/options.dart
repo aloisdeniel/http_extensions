@@ -39,15 +39,16 @@ class CacheOptions {
   /// A way of filtering responses (for exemple regarding the result status code, or the content length).
   final CacheShouldBeSaved shouldBeSaved;
 
-  const CacheOptions(
-      {this.forceUpdate = false,
-      this.forceCache = false,
-      this.returnCacheOnError = true,
-      this.ignoreCache = false,
-      this.keyBuilder = defaultCacheKeyBuilder,
-      this.shouldBeSaved = defaultShouldBeSaved,
-      this.store,
-      this.expiry = const Duration(minutes: 5)});
+  const CacheOptions({
+    this.forceUpdate = false,
+    this.forceCache = false,
+    this.returnCacheOnError = true,
+    this.ignoreCache = false,
+    this.keyBuilder = defaultCacheKeyBuilder,
+    this.shouldBeSaved = defaultShouldBeSaved,
+    this.store,
+    this.expiry = const Duration(minutes: 5),
+  });
 
   static final uuid = Uuid();
 

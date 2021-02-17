@@ -7,17 +7,19 @@ class ProtobufRequest extends BaseRequest {
   final List<int> bytes;
 
   /// Creates a new protobuf request.
-  ProtobufRequest.fromRequest(BaseRequest original, this.message)
-      : this.bytes = message.writeToBuffer(),
+  ProtobufRequest.fromRequest(
+    BaseRequest original,
+    this.message,
+  )   : bytes = message.writeToBuffer(),
         super(original.method, original.url) {
-    this.maxRedirects = original.maxRedirects;
-    this.followRedirects = original.followRedirects;
-    this.headers.addAll(original.headers);
-    this.persistentConnection = original.persistentConnection;
+    maxRedirects = original.maxRedirects;
+    followRedirects = original.followRedirects;
+    headers.addAll(original.headers);
+    persistentConnection = original.persistentConnection;
   }
 
   @override
-  int get contentLength => this.bytes.length;
+  int get contentLength => bytes.length;
 
   @override
   ByteStream finalize() {

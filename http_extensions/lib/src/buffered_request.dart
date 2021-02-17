@@ -17,18 +17,26 @@ class BufferedRequest<T extends BaseRequest> extends BaseRequest {
 
   @override
   int? get contentLength => base.contentLength;
+
+  @override
   set contentLength(int? v) => base.contentLength = v;
 
   @override
   bool get followRedirects => base.followRedirects;
+
+  @override
   set followRedirects(bool v) => base.followRedirects = v;
 
   @override
   int get maxRedirects => base.maxRedirects;
+
+  @override
   set maxRedirects(int v) => base.maxRedirects = v;
 
   @override
   bool get persistentConnection => base.persistentConnection;
+
+  @override
   set persistentConnection(bool v) => base.persistentConnection = v;
 
   @override
@@ -40,7 +48,7 @@ class BufferedRequest<T extends BaseRequest> extends BaseRequest {
   @override
   ByteStream finalize() {
     if (_bytes != null) return ByteStream.fromBytes(_bytes!);
-    if (this._futureBytes == null) this._futureBytes = _getBytes();
+    _futureBytes ??= _getBytes();
     return ByteStream(Stream.fromFuture(_futureBytes as Future<List<int>>));
   }
 

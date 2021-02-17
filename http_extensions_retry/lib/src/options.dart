@@ -18,8 +18,7 @@ class RetryOptions {
   /// with concurrency though).
   ///
   /// Defaults to [defaultRetryEvaluator].
-  RetryEvaluator get retryEvaluator =>
-      this._retryEvaluator ?? defaultRetryEvaluator;
+  RetryEvaluator get retryEvaluator => _retryEvaluator ?? defaultRetryEvaluator;
 
   final RetryEvaluator? _retryEvaluator;
 

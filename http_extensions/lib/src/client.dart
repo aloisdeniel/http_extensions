@@ -11,10 +11,10 @@ class ExtendedClient extends http.BaseClient {
   final http.BaseClient root;
   final List<Extension> extensions;
 
-  ExtendedClient({required http.BaseClient inner, this.extensions = const []})
-      : assert(inner != null),
-        assert(extensions != null),
-        root = _buildRoot(inner, extensions);
+  ExtendedClient({
+    required http.BaseClient inner,
+    this.extensions = const [],
+  }) : root = _buildRoot(inner, extensions);
 
   static http.BaseClient _buildRoot(
       http.BaseClient inner, List<Extension> extensions) {
