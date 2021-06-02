@@ -13,7 +13,7 @@ class BufferedRequest extends BaseRequest {
 
   List<int>? _bytes;
 
-  Future<List<int>?>? _futureBytes;
+  Future<List<int>>? _futureBytes;
 
   @override
   int? get contentLength => base.contentLength;
@@ -49,12 +49,12 @@ class BufferedRequest extends BaseRequest {
   ByteStream finalize() {
     if (_bytes != null) return ByteStream.fromBytes(_bytes!);
     _futureBytes ??= _getBytes();
-    return ByteStream(Stream.fromFuture(_futureBytes as Future<List<int>>));
+    return ByteStream(Stream.fromFuture(_futureBytes!));
   }
 
-  Future<List<int>?> _getBytes() async {
-    final s = await base.finalize();
+  Future<List<int>> _getBytes() async {
+    final s = base.finalize();
     _bytes = await s.toBytes();
-    return _bytes;
+    return _bytes!;
   }
 }
