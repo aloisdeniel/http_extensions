@@ -17,10 +17,6 @@ class BufferedRequest<T extends BaseRequest> extends BaseRequest {
 
   @override
   int? get contentLength => base.contentLength;
-  Future<List<int>?>? _futureBytes;
-
-  @override
-  int? get contentLength => base.contentLength;
 
   @override
   set contentLength(int? v) => base.contentLength = v;
