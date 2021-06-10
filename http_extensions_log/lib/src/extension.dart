@@ -9,8 +9,7 @@ import 'options.dart';
 class LogExtension extends Extension<LogOptions> {
   final Logger? logger;
 
-  LogExtension({LogOptions defaultOptions = const LogOptions(), this.logger})
-      : super(defaultOptions: defaultOptions);
+  LogExtension({LogOptions defaultOptions = const LogOptions(), this.logger}) : super(defaultOptions: defaultOptions);
 
   void log(String message, LogOptions options) {
     if (logger != null) {
@@ -22,8 +21,7 @@ class LogExtension extends Extension<LogOptions> {
 
   int _id = 0;
 
-  Future<String> _formatRequest(
-      int id, BaseRequest request, LogOptions options) async {
+  Future<String> _formatRequest(int id, BaseRequest request, LogOptions options) async {
     if (request is ExtensionRequest) {
       return _formatRequest(id, request.request, options);
     }
@@ -32,8 +30,7 @@ class LogExtension extends Extension<LogOptions> {
 
     requestLog.writeln('-> REQ($id) [ ${request.method} | ${request.url} ]');
     if (options.logHeaders) {
-      requestLog
-          .writeln('  * headers: ${request.headers.isEmpty ? 'empty' : ''}');
+      requestLog.writeln('  * headers: ${request.headers.isEmpty ? 'empty' : ''}');
       request.headers.forEach((k, v) {
         requestLog.writeln('    * $k: $v');
       });
@@ -42,27 +39,23 @@ class LogExtension extends Extension<LogOptions> {
     if (options.logContent) {
       requestLog.writeln('  * content-length: ${request.contentLength}');
 
-      final bytes = await request.finalize();
+      final bytes = request.finalize();
       final content = await bytes.toBytes();
-      requestLog.writeln(
-          '  * content: ${utf8.decode(content, allowMalformed: true)}');
+      requestLog.writeln('  * content: ${utf8.decode(content, allowMalformed: true)}');
     }
 
     return requestLog.toString();
   }
 
-  Future<String> _formatResponse(
-      int id, StreamedResponse response, LogOptions options) async {
+  Future<String> _formatResponse(int id, StreamedResponse response, LogOptions options) async {
     final requestLog = StringBuffer();
 
-    requestLog.writeln(
-        '<- RES($id) [ ${response.request!.method} | ${response.request!.url}]');
+    requestLog.writeln('<- RES($id) [ ${response.request!.method} | ${response.request!.url}]');
 
     requestLog.writeln('  * status-code: ${response.statusCode}');
 
     if (options.logHeaders) {
-      requestLog
-          .writeln('  * headers: ${response.headers.isEmpty ? 'empty' : ''}');
+      requestLog.writeln('  * headers: ${response.headers.isEmpty ? 'empty' : ''}');
       response.headers.forEach((k, v) {
         requestLog.writeln('    * $k: $v');
       });
@@ -71,15 +64,13 @@ class LogExtension extends Extension<LogOptions> {
     if (options.logContent) {
       requestLog.writeln('  * content-length: ${response.contentLength}');
       final content = await response.stream.toBytes();
-      requestLog.writeln(
-          '  * content: ${utf8.decode(content, allowMalformed: true)}');
+      requestLog.writeln('  * content: ${utf8.decode(content, allowMalformed: true)}');
     }
 
     return requestLog.toString();
   }
 
-  String _formatError(int id, BaseRequest request, dynamic error,
-      StackTrace stackTrace, LogOptions options) {
+  String _formatError(int id, BaseRequest request, dynamic error, StackTrace stackTrace, LogOptions options) {
     final errorLog = StringBuffer();
     errorLog.writeln('!) ERR($id) [ ${request.method} | ${request.url} ]');
 
@@ -94,8 +85,7 @@ class LogExtension extends Extension<LogOptions> {
     return errorLog.toString();
   }
 
-  Future<StreamedResponse> sendWithOptions(
-      BaseRequest request, LogOptions options) async {
+  Future<StreamedResponse> sendWithOptions(BaseRequest request, LogOptions options) async {
     if (!options.isEnabled) {
       return await super.sendWithOptions(request, options);
     }
@@ -119,13 +109,12 @@ class LogExtension extends Extension<LogOptions> {
 
       // Logging response
       final responsetLog = await _formatResponse(id, response, options);
-      this.log(responsetLog, options);
+      log(responsetLog, options);
 
       return response;
     } catch (error, stacktrace) {
-      final errorLog =
-          await _formatError(id, request, error, stacktrace, options);
-      this.log(errorLog, options);
+      final errorLog = _formatError(id, request, error, stacktrace, options);
+      log(errorLog, options);
       rethrow;
     }
   }
