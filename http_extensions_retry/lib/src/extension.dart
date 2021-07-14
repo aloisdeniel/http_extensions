@@ -14,8 +14,7 @@ class RetryExtension extends Extension<RetryOptions> {
 
   BaseRequest _copyRequest(BaseRequest original) {
     if (original is ExtensionRequest) {
-      return ExtensionRequest(
-          request: _copyRequest(original.request), options: original.options);
+      return ExtensionRequest(request: _copyRequest(original.request), options: original.options);
     }
 
     if (original is MultipartRequest) {
@@ -25,8 +24,7 @@ class RetryExtension extends Extension<RetryOptions> {
     return BufferedRequest(original);
   }
 
-  Future<StreamedResponse> _retry(
-      BaseRequest request, RetryOptions options) async {
+  Future<StreamedResponse> _retry(BaseRequest request, RetryOptions options) async {
     final newOptions = options.copyWith(
       retries: options.retries - 1,
     );
@@ -41,26 +39,28 @@ class RetryExtension extends Extension<RetryOptions> {
       await Future.delayed(options.retryInterval);
     }
 
-    logger
-        ?.fine('Retrying request (remaining retries: ${options.retries - 1})');
-    return await this.sendWithOptions(_copyRequest(request), newOptions);
+    logger?.fine('Retrying request (remaining retries: ${options.retries - 1})');
+    return await sendWithOptions(_copyRequest(request), newOptions);
   }
 
   @override
-  Future<StreamedResponse> sendWithOptions(
-      BaseRequest request, RetryOptions options) async {
+  Future<StreamedResponse> sendWithOptions(BaseRequest request, RetryOptions options) async {
     // Copying request a first time in case of a [StreamRequest] that should
     // be buffered for potential later retry.
     request = _copyRequest(request);
 
     try {
       final result = await super.sendWithOptions(request, options);
-      if (options.retries > 0 && options.retryEvaluator(null, result) as bool) {
+      final eval = options.retryEvaluator(null, result);
+      final retry = eval is Future ? await eval : eval;
+      if (options.retries > 0 && retry) {
         return _retry(request, options);
       }
       return result;
     } catch (e) {
-      if (options.retries > 0 && options.retryEvaluator(e, null) as bool) {
+      final eval = options.retryEvaluator(e, null);
+      final retry = eval is Future ? await eval : eval;
+      if (options.retries > 0 && retry) {
         return _retry(request, options);
       } else {
         rethrow;
