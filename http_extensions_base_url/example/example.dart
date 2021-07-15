@@ -1,7 +1,7 @@
+import 'package:http/http.dart';
 import 'package:http_extensions/http_extensions.dart';
 import 'package:http_extensions_base_url/http_extensions_base_url.dart';
 import 'package:logging/logging.dart';
-import 'package:http/http.dart';
 
 void main() async {
   // Displaying logs
@@ -13,9 +13,7 @@ void main() async {
   final client = ExtendedClient(
     inner: Client() as BaseClient,
     extensions: [
-      BaseUrlExtension(
-          logger: Logger('BaseUrl'),
-          defaultOptions: BaseUrlOptions(url: Uri.parse('http://flutter.dev'))),
+      BaseUrlExtension(logger: Logger('BaseUrl'), defaultOptions: BaseUrlOptions(url: Uri.parse('https://flutter.dev'))),
     ],
   );
 

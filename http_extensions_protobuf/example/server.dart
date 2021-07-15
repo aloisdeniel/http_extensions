@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'hello.pb.dart';
 
-main() async {
-  var server = await HttpServer.bind(InternetAddress.LOOPBACK_IP_V4, 8080);
+void main() async {
+  var server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
   print('Serving at ${server.address}:${server.port}');
 
   await for (var request in server) {
@@ -18,8 +18,7 @@ main() async {
 
     print(' * Message => $message');
 
-    final response =
-        (HelloReply()..message = 'Hello ${message.name} !').writeToBuffer();
+    final response = (HelloReply()..message = 'Hello ${message.name} !').writeToBuffer();
 
     print('Response');
     print('  * Content-Length: ${response.length}');
@@ -27,7 +26,7 @@ main() async {
     request.response
       ..headers.contentType = ContentType('application', 'x-protobuf')
       ..headers.contentLength = response.length
-      ..add(response)
-      ..close();
+      ..add(response);
+    await request.response.close();
   }
 }
