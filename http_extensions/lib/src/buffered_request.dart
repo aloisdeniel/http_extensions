@@ -52,9 +52,9 @@ class BufferedRequest<T extends BaseRequest> extends BaseRequest {
     return ByteStream(Stream.fromFuture(_futureBytes as Future<List<int>>));
   }
 
-  Future<List<int>?> _getBytes() async {
+  Future<List<int>> _getBytes() async {
     final s = await base.finalize();
     _bytes = await s.toBytes();
-    return _bytes;
+    return _bytes!;
   }
 }
