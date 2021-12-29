@@ -6,10 +6,10 @@ import 'package:http/http.dart';
 ///
 /// The [base.finalize] method is called on first call to [finalize] and
 /// the result is stored to be returned on each later [finalize] calls.
-class BufferedRequest extends BaseRequest {
+class BufferedRequest<T extends BaseRequest> extends BaseRequest {
   BufferedRequest(this.base) : super(base.method, base.url);
 
-  final BaseRequest base;
+  final T base;
 
   List<int>? _bytes;
 
@@ -52,9 +52,9 @@ class BufferedRequest extends BaseRequest {
     return ByteStream(Stream.fromFuture(_futureBytes as Future<List<int>>));
   }
 
-  Future<List<int>?> _getBytes() async {
+  Future<List<int>> _getBytes() async {
     final s = await base.finalize();
     _bytes = await s.toBytes();
-    return _bytes;
+    return _bytes!;
   }
 }

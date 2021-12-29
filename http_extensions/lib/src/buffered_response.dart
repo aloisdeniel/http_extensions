@@ -8,21 +8,21 @@ class BufferedStreamResponse implements StreamedResponse {
 
   List<int>? _bytes;
 
-  Stream<List<int>?> _getStream() {
+  Stream<List<int>> _getStream() {
     if (_bytes != null) {
-      return Stream.fromIterable([_bytes]);
+      return Stream.fromIterable([_bytes!]);
     }
 
     return Stream.fromFuture(_readBytes());
   }
 
-  Future<List<int>?> _readBytes() async {
+  Future<List<int>> _readBytes() async {
     _bytes = await base.stream.toBytes();
-    return _bytes;
+    return _bytes!;
   }
 
   @override
-  ByteStream get stream => ByteStream(_getStream() as Stream<List<int>>);
+  ByteStream get stream => ByteStream(_getStream());
 
   @override
   int? get contentLength => base.contentLength;

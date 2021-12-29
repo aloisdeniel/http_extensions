@@ -18,6 +18,10 @@ class RetryExtension extends Extension<RetryOptions> {
           request: _copyRequest(original.request), options: original.options);
     }
 
+    if (original is MultipartRequest) {
+      return BufferedMultipartRequest(original);
+    }
+
     return BufferedRequest(original);
   }
 
